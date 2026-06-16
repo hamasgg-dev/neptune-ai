@@ -5,3 +5,6 @@ langchain-chroma
 pypdf
 chromadb
 langchain-google-genai
+pytz
+python-dotenv
+requests
