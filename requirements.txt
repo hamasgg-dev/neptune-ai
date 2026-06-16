@@ -8,3 +8,4 @@ langchain-google-genai
 pytz
 python-dotenv
 requests
+scikit-learn
