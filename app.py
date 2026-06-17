@@ -965,7 +965,7 @@ elif menu == t["menu_chat"]:
                         sources = response_data["sources"]
                         retrieved_chunks = response_data["retrieved_chunks"]
                         if sources:
-                            answer += f"\n\n*📌 Источники: Страницы {', '.join(sources)}*"
+                            answer += f"\n\n*{t['sources_pages']} {', '.join(sources)}*"
 
                     st.session_state.messages.append({"role": "user", "content": prompt})
                     st.session_state.messages.append({"role": "assistant", "content": answer})

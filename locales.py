@@ -58,7 +58,8 @@ TRANSLATIONS = {
         "vessel_tracking": "📍 Live Vessel Tracking & Info",
         "vessel_type": "Type",
         "vessel_length": "Length",
-        "vessel_bollard": "Bollard Pull"
+        "vessel_bollard": "Bollard Pull",
+        "sources_pages": "📌 Sources: Pages"
     },
     "NL": {
         "menu_chat": "💬 Chat met Assistent",
@@ -119,7 +120,8 @@ TRANSLATIONS = {
         "vessel_tracking": "📍 Live Scheepsvolging & Info",
         "vessel_type": "Type",
         "vessel_length": "Lengte",
-        "vessel_bollard": "Trekkracht"
+        "vessel_bollard": "Trekkracht",
+        "sources_pages": "📌 Bronnen: Pagina's"
     },
     "PH": {
         "menu_chat": "💬 Kausapin ang Assistant",
@@ -180,7 +182,8 @@ TRANSLATIONS = {
         "vessel_tracking": "📍 Live Pagsubaybay sa Barko at Impormasyon",
         "vessel_type": "Uri",
         "vessel_length": "Haba",
-        "vessel_bollard": "Bollard Pull"
+        "vessel_bollard": "Bollard Pull",
+        "sources_pages": "📌 Mga Pinagmulan: Mga Pahina"
     },
     "RU": {
         "menu_chat": "💬 Чат с Ассистентом",
@@ -241,7 +244,8 @@ TRANSLATIONS = {
         "vessel_tracking": "📍 Отслеживание судна и информация",
         "vessel_type": "Тип",
         "vessel_length": "Длина",
-        "vessel_bollard": "Тяговое усилие"
+        "vessel_bollard": "Тяговое усилие",
+        "sources_pages": "📌 Источники: Страницы"
     },
     "UA": {
         "menu_chat": "💬 Чат з Асистентом",
@@ -302,6 +306,7 @@ TRANSLATIONS = {
         "vessel_tracking": "📍 Відстеження судна та інформація",
         "vessel_type": "Тип",
         "vessel_length": "Довжина",
-        "vessel_bollard": "Тягове зусилля"
+        "vessel_bollard": "Тягове зусилля",
+        "sources_pages": "📌 Джерела: Сторінки"
     }
 }
