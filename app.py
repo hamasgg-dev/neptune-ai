@@ -229,6 +229,15 @@ neptune_css = """
         font-weight: 700 !important;
     }
 
+    /* Увеличиваем поле ввода для мобильных */
+    div[data-testid="stChatInput"] textarea {
+        min-height: 60px !important;
+        font-size: 16px !important;
+        padding-top: 14px !important;
+        padding-bottom: 14px !important;
+        line-height: 1.5 !important;
+    }
+
     /* Боковая панель */
     [data-testid="stSidebar"] {
         background-color: #1A2B4C;
