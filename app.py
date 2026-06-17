@@ -671,9 +671,33 @@ if os.path.exists("assets/logo_transparent.png"):
         for v in eurotugs_fleet:
             vessel_links += f'<a href="/?menu={current_menu}&vessel={v.replace(" ", "%20")}" target="_self">{v}</a>'
 
-        import hashlib
-        from datetime import datetime
-        def get_vessel_status(vessel_name):
+        @st.cache_data(ttl=600, show_spinner=False)
+        def get_vessel_status(vessel_name, imo=None):
+            if imo:
+                try:
+                    import requests
+                    import re
+                    from bs4 import BeautifulSoup
+                    
+                    url = f"https://www.vesselfinder.com/vessels/details/{imo}"
+                    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+                    resp = requests.get(url, headers=headers, timeout=5)
+                    if resp.status_code == 200:
+                        text = BeautifulSoup(resp.text, 'html.parser').get_text()
+                        
+                        loc_match = re.search(r'is\s+at\s+(.*?)\s+reported', text)
+                        loc = loc_match.group(1).strip() if loc_match else "Unknown location"
+                        
+                        status_match = re.search(r'Navigation Status\s+(.*?)\s+Position received', text, re.DOTALL)
+                        status = status_match.group(1).strip() if status_match else "Unknown status"
+                        
+                        return loc, status
+                except Exception:
+                    pass
+            
+            # Fallback (mock)
+            import hashlib
+            from datetime import datetime
             seed = f"{vessel_name}_{datetime.utcnow().strftime('%Y-%m-%d %H')}"
             h = int(hashlib.md5(seed.encode()).hexdigest(), 16)
             locations = ["North Sea", "Baltic Sea", "Rotterdam Port", "English Channel", "Norwegian Sea", "Bay of Biscay"]
@@ -688,7 +712,7 @@ if os.path.exists("assets/logo_transparent.png"):
         loc_text = ""
         v_info = VESSEL_DATA.get(current_vessel, {})
         if v_info:
-            loc, status = get_vessel_status(current_vessel)
+            loc, status = get_vessel_status(current_vessel, v_info.get("imo"))
             loc_text = f'<div style="font-size: 11px; color: #888; position: absolute; top: 110%; left: 0px; white-space: nowrap; font-family: sans-serif;">📍 {loc} | {status}</div>'
 
         langs = {"English": "EN", "Dutch": "NL", "Tagalog": "PH", "Русский": "RU", "Українська": "UA"}

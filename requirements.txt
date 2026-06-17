@@ -9,3 +9,4 @@ pytz
 python-dotenv
 requests
 scikit-learn
+beautifulsoup4
