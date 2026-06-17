@@ -660,9 +660,9 @@ if os.path.exists("assets/logo_transparent.png"):
     
     with col_logo:
         st.markdown(f'''
-        <div style="margin-top: -10px;">
+        <div style="margin-top: -20px; margin-bottom: -10px;">
             <a href="/?menu=chat" target="_self">
-                <img src="data:image/png;base64,{img_b64}" style="max-height: 75px; width: auto; object-fit: contain; cursor: pointer; border-radius: 8px;">
+                <img src="data:image/png;base64,{img_b64}" style="height: 140px; width: auto; object-fit: contain; cursor: pointer; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
             </a>
         </div>
         ''', unsafe_allow_html=True)
