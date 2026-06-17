@@ -211,7 +211,7 @@ HELPFUL AND ACCURATE ANSWER IN {prompt_lang}:"""
     return {"answer": answer, "sources": list(sources), "retrieved_chunks": [doc.page_content for doc in docs]}
 
 # --- UI LOGIC ---
-st.set_page_config(page_title="Neptune AI", page_icon="assets/logo_transparent.png", layout="wide")
+st.set_page_config(page_title="Neptune AI", page_icon="assets/logo_ai.png", layout="wide")
 
 # --- CUSTOM NEPTUNE MARINE CSS ---
 neptune_css = """
@@ -903,7 +903,7 @@ elif menu == t["menu_chat"]:
         st.session_state.messages = []
 
     for i, message in enumerate(st.session_state.messages):
-        avatar = "assets/logo_transparent.png" if message["role"] == "assistant" else "👤"
+        avatar = "assets/logo_ai.png" if message["role"] == "assistant" else "👤"
         with st.chat_message(message["role"], avatar=avatar):
             display_content = re.sub(r"\[DOWNLOAD_FORM:.*?\]", "", message["content"]).strip()
             st.markdown(display_content)
@@ -974,3 +974,6 @@ elif menu == t["menu_chat"]:
                     st.rerun()
                 except Exception as e:
                     st.error(f"{t['err_rag']} {e}")
+
+    # Empty bottom space for padding
+    st.markdown("<br><br><br><br><br>", unsafe_allow_html=True)
