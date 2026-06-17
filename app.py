@@ -211,7 +211,7 @@ HELPFUL AND ACCURATE ANSWER IN {prompt_lang}:"""
     return {"answer": answer, "sources": list(sources), "retrieved_chunks": [doc.page_content for doc in docs]}
 
 # --- UI LOGIC ---
-st.set_page_config(page_title="Neptune AI", page_icon="🚢", layout="wide")
+st.set_page_config(page_title="Neptune AI", page_icon="assets/logo_transparent.png", layout="wide")
 
 # --- CUSTOM NEPTUNE MARINE CSS ---
 neptune_css = """
