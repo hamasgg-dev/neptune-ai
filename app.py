@@ -550,12 +550,12 @@ VESSEL_DATA = {
     "Neptun Power": {"imo": "1071393", "type": "EuroTug 2710", "length": "27.27m", "bollard_pull": "40t"}
 }
 eurotugs_fleet = list(VESSEL_DATA.keys())
-current_vessel = os.getenv("VESSEL_NAME", "Neptun Commander")
+current_vessel = os.getenv("VESSEL_NAME", "Neptun Fury")
 if current_vessel not in eurotugs_fleet:
     eurotugs_fleet.append(current_vessel)
 
 # Check query params for vessel selection
-query_vessel = st.query_params.get("vessel")
+query_vessel = st.query_params.get("vessel", "Neptun Fury")
 if query_vessel and query_vessel != current_vessel:
     dotenv.set_key(".env", "VESSEL_NAME", query_vessel)
     os.environ["VESSEL_NAME"] = query_vessel
