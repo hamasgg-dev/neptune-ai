@@ -211,7 +211,7 @@ HELPFUL AND ACCURATE ANSWER IN {prompt_lang}:"""
     return {"answer": answer, "sources": list(sources), "retrieved_chunks": [doc.page_content for doc in docs]}
 
 # --- UI LOGIC ---
-favicon = "assets/logo_ai.png" if os.path.exists("assets/logo_ai.png") else "🚢"
+favicon = "assets/logo_transparent.png" if os.path.exists("assets/logo_transparent.png") else "🚢"
 st.set_page_config(page_title="Neptune AI", page_icon=favicon, layout="wide")
 
 # --- CUSTOM NEPTUNE MARINE CSS ---
@@ -660,26 +660,16 @@ with col_logo:
         with open("assets/logo_transparent.png", "rb") as f:
             img_b64 = base64.b64encode(f.read()).decode()
         st.markdown(f'''
-        <div style="margin-top: -40px;">
+        <div style="margin-top: -10px;">
             <a href="/?menu=chat" target="_self">
-                <img src="data:image/png;base64,{img_b64}" style="max-width: 100%; width: 240px; cursor: pointer;">
+                <img src="data:image/png;base64,{img_b64}" style="max-height: 75px; width: auto; object-fit: contain; cursor: pointer; border-radius: 8px;">
             </a>
         </div>
         ''', unsafe_allow_html=True)
     else:
-        st.markdown('''
-        <div style="margin-top: -20px;">
-            <a href="/?menu=chat" target="_self" style="text-decoration: none; color: white; display:flex; align-items:center; gap: 10px;">
-                <div style="background: linear-gradient(135deg, #38bdf8, #1e3a8a); padding: 5px 12px; border-radius: 8px; font-weight: bold; font-style: italic; font-size: 24px;">N</div>
-                <div>
-                    <div style="margin:0; padding:0; font-size: 24px; font-weight: 800; letter-spacing: -0.5px;">Neptune</div>
-                    <div style="margin:0; font-size: 10px; opacity:0.7; font-weight: 600; letter-spacing: 1px;">AI SMS ASSISTANT</div>
-                </div>
-            </a>
-        </div>
-        ''', unsafe_allow_html=True)
-        
-    with col_nav:
+        st.markdown('''<h2 style="color:white; margin-top:-10px;">Neptune AI</h2>''', unsafe_allow_html=True)
+    
+with col_nav:
         # Сгенерируем ссылки для судов
         vessel_links = ""
         for v in eurotugs_fleet:
@@ -916,7 +906,7 @@ elif menu == t["menu_chat"]:
 
     for i, message in enumerate(st.session_state.messages):
         if message["role"] == "assistant":
-            avatar = "assets/logo_ai.png" if os.path.exists("assets/logo_ai.png") else "🚢"
+            avatar = "assets/logo_transparent.png" if os.path.exists("assets/logo_transparent.png") else "🚢"
         else:
             avatar = "👤"
         with st.chat_message(message["role"], avatar=avatar):
