@@ -555,7 +555,7 @@ if current_vessel not in eurotugs_fleet:
     eurotugs_fleet.append(current_vessel)
 
 # Check query params for vessel selection
-query_vessel = st.query_params.get("vessel", "Neptun Fury")
+query_vessel = st.query_params.get("vessel")
 if query_vessel and query_vessel != current_vessel:
     dotenv.set_key(".env", "VESSEL_NAME", query_vessel)
     os.environ["VESSEL_NAME"] = query_vessel
