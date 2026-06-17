@@ -741,97 +741,121 @@ if current_menu == "lang":
 menu = t["menu_settings"] if current_menu == "settings" else t["menu_chat"]
 
 if menu == t["menu_settings"]:
-    st.title(t["settings_title"])
-    st.markdown(t["settings_desc"])
-    
-    st.header(t["api_key_header"])
-    api_key = st.text_input(t["api_key_input"], value=saved_api_key, type="password")
-    if api_key and api_key != saved_api_key:
-        dotenv.set_key(".env", "GEMINI_API_KEY", api_key)
-        st.success(t["api_saved"])
-        st.rerun()
+    # Проверка прав администратора
+    if not st.session_state.get("is_admin", False):
+        st.title("🔒 Admin Access Required")
+        st.markdown("Please enter the administrator password to access the system settings.")
         
-    st.markdown(t["get_api_key"])
-    
-    st.divider()
-
-    st.header(t["db_header"])
-    uploaded_file = st.file_uploader(t["upload_pdf"], type="pdf")
-    
-    if uploaded_file is not None:
-        if st.button(t["index_doc"]):
-            if not saved_api_key:
-                st.error(t["err_no_key"])
-            else:
-                with st.spinner(t["spin_indexing"]):
-                    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
-                        tmp_file.write(uploaded_file.getvalue())
-                        tmp_path = tmp_file.name
-                    
-                    try:
-                        num_chunks = index_pdf(tmp_path, saved_api_key, st.session_state.chroma_path)
-                        st.success(f"{t['success_index']} ({num_chunks})")
-                    except Exception as e:
-                        import traceback
-                        error_trace = traceback.format_exc()
-                        st.error(f"{t['err_index']} {e}\n\n```python\n{error_trace}\n```")
-                    finally:
-                        try:
-                            os.unlink(tmp_path)
-                        except:
-                            pass
-
-    st.divider()
-    
-    st.header(t["forms_header"])
-    st.markdown(t["forms_desc"])
-    uploaded_forms = st.file_uploader(t["upload_forms"], type=["pdf", "docx", "xlsx", "zip"], accept_multiple_files=True)
-    
-    if st.button(t["save_forms"]):
-        if uploaded_forms:
-            saved_count = 0
-            for form_file in uploaded_forms:
-                if form_file.name.endswith('.zip'):
-                    with tempfile.NamedTemporaryFile(delete=False, suffix=".zip") as tmp_zip:
-                        tmp_zip.write(form_file.getvalue())
-                        tmp_zip_path = tmp_zip.name
-                    try:
-                        with zipfile.ZipFile(tmp_zip_path, 'r') as zip_ref:
-                            for zip_info in zip_ref.infolist():
-                                if zip_info.is_dir():
-                                    continue
-                                zip_info.filename = os.path.basename(zip_info.filename)
-                                if zip_info.filename:
-                                    zip_ref.extract(zip_info, st.session_state.forms_dir)
-                        st.success(f"{t['success_unzip']} {form_file.name}")
-                        saved_count += len(zip_ref.namelist())
-                    except Exception as e:
-                        st.error(f"{t['err_unzip']} {e}")
-                    finally:
-                        try:
-                            os.unlink(tmp_zip_path)
-                        except: pass
-                else:
-                    file_path = os.path.join(st.session_state.forms_dir, form_file.name)
-                    with open(file_path, "wb") as f:
-                        f.write(form_file.getvalue())
-                    saved_count += 1
-            st.success(f"{t['success_forms']} {saved_count}")
-        else:
-            st.warning(t["warn_no_forms"])
+        correct_password = os.environ.get("ADMIN_PASSWORD", "admin123")
+        try:
+            if "ADMIN_PASSWORD" in st.secrets:
+                correct_password = st.secrets["ADMIN_PASSWORD"]
+        except:
+            pass
             
-    # Показать сохраненные формы
-    if os.path.exists(st.session_state.forms_dir):
-        available = []
-        for root, dirs, files in os.walk(st.session_state.forms_dir):
-            for file in files:
-                available.append(file)
-        if available:
-            st.markdown(t["forms_in_db"].format(len(available)))
-            if st.button(t["clear_forms"]):
-                shutil.rmtree(st.session_state.forms_dir)
-                os.makedirs(st.session_state.forms_dir)
+        pwd = st.text_input("Password", type="password")
+        if st.button("Login"):
+            if pwd == correct_password:
+                st.session_state.is_admin = True
                 st.rerun()
+            else:
+                st.error("Incorrect password.")
+    else:
+        st.title(t["settings_title"])
+        st.markdown(t["settings_desc"])
+        
+        if st.button("🚪 Logout from Admin", type="secondary"):
+            st.session_state.is_admin = False
+            st.rerun()
+        
+        st.header(t["api_key_header"])
+        api_key = st.text_input(t["api_key_input"], value=saved_api_key, type="password")
+        if api_key and api_key != saved_api_key:
+            dotenv.set_key(".env", "GEMINI_API_KEY", api_key)
+            st.success(t["api_saved"])
+            st.rerun()
+            
+        st.markdown(t["get_api_key"])
+        
+        st.divider()
+
+        st.header(t["db_header"])
+        uploaded_file = st.file_uploader(t["upload_pdf"], type="pdf")
+        
+        if uploaded_file is not None:
+            if st.button(t["index_doc"]):
+                if not saved_api_key:
+                    st.error(t["err_no_key"])
+                else:
+                    with st.spinner(t["spin_indexing"]):
+                        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
+                            tmp_file.write(uploaded_file.getvalue())
+                            tmp_path = tmp_file.name
+                        
+                        try:
+                            num_chunks = index_pdf(tmp_path, saved_api_key, st.session_state.chroma_path)
+                            st.success(f"{t['success_index']} ({num_chunks})")
+                        except Exception as e:
+                            import traceback
+                            error_trace = traceback.format_exc()
+                            st.error(f"{t['err_index']} {e}\n\n```python\n{error_trace}\n```")
+                        finally:
+                            try:
+                                os.unlink(tmp_path)
+                            except:
+                                pass
+
+        st.divider()
+        
+        st.header(t["forms_header"])
+        st.markdown(t["forms_desc"])
+        uploaded_forms = st.file_uploader(t["upload_forms"], type=["pdf", "docx", "xlsx", "zip"], accept_multiple_files=True)
+        
+        if st.button(t["save_forms"]):
+            if uploaded_forms:
+                saved_count = 0
+                for form_file in uploaded_forms:
+                    if form_file.name.endswith('.zip'):
+                        with tempfile.NamedTemporaryFile(delete=False, suffix=".zip") as tmp_zip:
+                            tmp_zip.write(form_file.getvalue())
+                            tmp_zip_path = tmp_zip.name
+                        try:
+                            with zipfile.ZipFile(tmp_zip_path, 'r') as zip_ref:
+                                for zip_info in zip_ref.infolist():
+                                    if zip_info.is_dir():
+                                        continue
+                                    zip_info.filename = os.path.basename(zip_info.filename)
+                                    if zip_info.filename:
+                                        zip_ref.extract(zip_info, st.session_state.forms_dir)
+                            st.success(f"{t['success_unzip']} {form_file.name}")
+                            saved_count += len(zip_ref.namelist())
+                        except Exception as e:
+                            st.error(f"{t['err_unzip']} {e}")
+                        finally:
+                            try:
+                                os.unlink(tmp_zip_path)
+                            except: pass
+                    else:
+                        file_path = os.path.join(st.session_state.forms_dir, form_file.name)
+                        with open(file_path, "wb") as f:
+                            f.write(form_file.getvalue())
+                        saved_count += 1
+                st.success(f"{t['success_forms']} {saved_count}")
+            else:
+                st.warning(t["warn_no_forms"])
+                
+        # Показать сохраненные формы
+        if os.path.exists(st.session_state.forms_dir):
+            available = []
+            for root, dirs, files in os.walk(st.session_state.forms_dir):
+                for file in files:
+                    available.append(file)
+            if available:
+                st.markdown(t["forms_in_db"].format(len(available)))
+                if st.button(t["clear_forms"]):
+                    shutil.rmtree(st.session_state.forms_dir)
+                    os.makedirs(st.session_state.forms_dir)
+                    st.rerun()
 
 elif menu == t["menu_chat"]:
     def type_text(text):
