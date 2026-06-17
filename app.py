@@ -211,8 +211,7 @@ HELPFUL AND ACCURATE ANSWER IN {prompt_lang}:"""
     return {"answer": answer, "sources": list(sources), "retrieved_chunks": [doc.page_content for doc in docs]}
 
 # --- UI LOGIC ---
-favicon = "assets/logo_transparent.png" if os.path.exists("assets/logo_transparent.png") else "🚢"
-st.set_page_config(page_title="Neptune AI", page_icon=favicon, layout="wide")
+st.set_page_config(page_title="Neptune AI", page_icon="🚢", layout="wide")
 
 # --- CUSTOM NEPTUNE MARINE CSS ---
 neptune_css = """
@@ -651,25 +650,24 @@ nav_css = """
 </style>
 """
 
-# Render Logo and Nav side-by-side using Streamlit columns
-col_logo, col_nav = st.columns([1, 3], vertical_alignment="center")
-
-with col_logo:
-    if os.path.exists("assets/logo_transparent.png"):
-        import base64
-        with open("assets/logo_transparent.png", "rb") as f:
-            img_b64 = base64.b64encode(f.read()).decode()
+if os.path.exists("assets/logo_transparent.png"):
+    import base64
+    with open("assets/logo_transparent.png", "rb") as f:
+        img_b64 = base64.b64encode(f.read()).decode()
+    
+    # Render Logo and Nav side-by-side using Streamlit columns
+    col_logo, col_nav = st.columns([1, 3], vertical_alignment="center")
+    
+    with col_logo:
         st.markdown(f'''
-        <div style="margin-top: -10px;">
+        <div style="margin-top: -40px;">
             <a href="/?menu=chat" target="_self">
-                <img src="data:image/png;base64,{img_b64}" style="max-height: 75px; width: auto; object-fit: contain; cursor: pointer; border-radius: 8px;">
+                <img src="data:image/png;base64,{img_b64}" style="max-width: 100%; width: 240px; cursor: pointer;">
             </a>
         </div>
         ''', unsafe_allow_html=True)
-    else:
-        st.markdown('''<h2 style="color:white; margin-top:-10px;">Neptune AI</h2>''', unsafe_allow_html=True)
-    
-with col_nav:
+        
+    with col_nav:
         # Сгенерируем ссылки для судов
         vessel_links = ""
         for v in eurotugs_fleet:
@@ -905,10 +903,7 @@ elif menu == t["menu_chat"]:
         st.session_state.messages = []
 
     for i, message in enumerate(st.session_state.messages):
-        if message["role"] == "assistant":
-            avatar = "assets/logo_transparent.png" if os.path.exists("assets/logo_transparent.png") else "🚢"
-        else:
-            avatar = "👤"
+        avatar = "assets/logo_transparent.png" if message["role"] == "assistant" else "👤"
         with st.chat_message(message["role"], avatar=avatar):
             display_content = re.sub(r"\[DOWNLOAD_FORM:.*?\]", "", message["content"]).strip()
             st.markdown(display_content)
