@@ -550,28 +550,30 @@ VESSEL_DATA = {
     "Neptun Power": {"imo": "1071393", "type": "EuroTug 2710", "length": "27.27m", "bollard_pull": "40t"}
 }
 eurotugs_fleet = list(VESSEL_DATA.keys())
-current_vessel = os.getenv("VESSEL_NAME", "Neptun Fury")
-if current_vessel not in eurotugs_fleet:
-    eurotugs_fleet.append(current_vessel)
+if "current_vessel" not in st.session_state:
+    st.session_state.current_vessel = "Neptun Fury"
 
-# Check query params for vessel selection
 query_vessel = st.query_params.get("vessel")
-if query_vessel and query_vessel != current_vessel:
-    dotenv.set_key(".env", "VESSEL_NAME", query_vessel)
-    os.environ["VESSEL_NAME"] = query_vessel
-    if query_vessel in VESSEL_DATA:
-        new_imo = VESSEL_DATA[query_vessel]["imo"]
-        dotenv.set_key(".env", "VESSEL_IMO", new_imo)
-        os.environ["VESSEL_IMO"] = new_imo
+if query_vessel:
+    st.session_state.current_vessel = query_vessel
     st.query_params.pop("vessel", None)
     st.rerun()
 
+current_vessel = st.session_state.current_vessel
+if current_vessel not in eurotugs_fleet:
+    eurotugs_fleet.append(current_vessel)
+
 # Check query params for lang selection
+if "current_lang" not in st.session_state:
+    st.session_state.current_lang = "EN"
+
 query_lang = st.query_params.get("setlang")
 if query_lang and query_lang in ["EN", "NL", "PH", "RU", "UA"]:
-    st.session_state.lang = query_lang
+    st.session_state.current_lang = query_lang
     st.query_params.pop("setlang", None)
     st.rerun()
+
+current_lang = st.session_state.current_lang
 
 # Custom CSS for slanted navigation tabs
 nav_css = """
